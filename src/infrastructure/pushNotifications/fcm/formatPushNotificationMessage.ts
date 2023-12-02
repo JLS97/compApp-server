@@ -1,0 +1,115 @@
+import { BaseMessage } from "firebase-admin/messaging";
+import { BasePreparedPushNotification } from "../../../domain/pushNotifications/types.js";
+
+export function formatPushNotificationMessage(item: BasePreparedPushNotification): BaseMessage {
+  return {
+    android: {
+      collapseKey: item.groupingKey,
+      data: item.data ? JSON.parse(item.data) : undefined,
+      fcmOptions: {
+        analyticsLabel: item.analyticsLabel,
+      },
+      notification: {
+        body: item.body,
+        bodyLocArgs: undefined,
+        bodyLocKey: undefined,
+        channelId: item.channelId,
+        clickAction: undefined,
+        color: undefined,
+        defaultLightSettings: undefined,
+        defaultSound: true,
+        defaultVibrateTimings: true,
+        eventTimestamp: item.absoluteTimeEvent,
+        icon: item.iconUrl,
+        imageUrl: item.imageUrl,
+        lightSettings: {
+          color: undefined,
+          lightOffDurationMillis: undefined,
+          lightOnDurationMillis: undefined,
+        },
+        localOnly: item.localOnly,
+        notificationCount: undefined,
+        priority: item.notificationMessagePriority,
+        sound: undefined,
+        sticky: false,
+        tag: item.groupingKey,
+        ticker: undefined,
+        title: item.title,
+        titleLocArgs: undefined,
+        titleLocKey: undefined,
+        vibrateTimingsMillis: undefined,
+        visibility: item.visibility,
+      },
+      priority: item.notificationPriority,
+      restrictedPackageName: undefined,
+      ttl: undefined,
+    },
+    apns: {
+      fcmOptions: {
+        analyticsLabel: item.analyticsLabel,
+        imageUrl: item.imageUrl,
+      },
+      headers: item.headers,
+      payload: {
+        aps: {
+          alert: {
+            actionLocKey: undefined,
+            body: item.body,
+            launchImage: undefined,
+            locArgs: undefined,
+            locKey: undefined,
+            subtitle: item.subtitle,
+            subtitleLocArgs: undefined,
+            subtitleLocKey: undefined,
+            title: item.title,
+            titleLocArgs: undefined,
+            titleLocKey: undefined,
+          },
+          badge: undefined,
+          category: undefined,
+          contentAvailable: true,
+          mutableContent: false,
+          sound: {
+            name: "default",
+            critical: undefined,
+            volume: undefined,
+          },
+          threadId: item.groupingKey,
+        },
+      },
+    },
+    data: item.data ? JSON.parse(item.data) : undefined,
+    fcmOptions: {
+      analyticsLabel: item.analyticsLabel,
+    },
+    notification: {
+      body: item.body,
+      imageUrl: item.imageUrl,
+      title: item.title,
+    },
+    webpush: {
+      data: item.data ? JSON.parse(item.data) : undefined,
+      fcmOptions: {
+        link: item.webUrlToOpen,
+      },
+      headers: item.headers,
+      notification: {
+        actions: undefined,
+        badge: undefined,
+        body: item.body,
+        data: item.data,
+        dir: "auto",
+        icon: item.iconUrl,
+        image: item.imageUrl,
+        lang: item.language,
+        renotify: undefined,
+        requireInteraction: undefined,
+        silent: undefined,
+        tag: item.groupingKey,
+        timestamp: undefined,
+        title: item.title,
+        vibrate: undefined,
+      },
+    },
+  }
+}

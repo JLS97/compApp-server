@@ -1,0 +1,57 @@
+const AccountNotFound = {
+  AUTHENTICATION_ACCOUNT_NOT_FOUND: 'AUTHENTICATION_ACCOUNT_NOT_FOUND',
+};
+
+const AuthProviderNotFound = {
+  AUTHENTICATION_AUTH_PROVIDER_NOT_FOUND: 'AUTHENTICATION_AUTH_PROVIDER_NOT_FOUND',
+};
+
+const AuthProviderEmailNotFound = {
+  AUTHENTICATION_AUTH_PROVIDER_EMAIL_NOT_FOUND: 'AUTHENTICATION_AUTH_PROVIDER_EMAIL_NOT_FOUND',
+};
+
+const AuthProviderWrongPassword = {
+  AUTHENTICATION_AUTH_PROVIDER_WRONG_PASSWORD: 'AUTHENTICATION_AUTH_PROVIDER_WRONG_PASSWORD',
+};
+
+const AuthProviderWrongProvider = {
+  AUTHENTICATION_AUTH_PROVIDER_WRONG_PROVIDER: 'AUTHENTICATION_AUTH_PROVIDER_WRONG_PROVIDER',
+};
+
+const AuthProviderWrongCode = {
+  AUTHENTICATION_AUTH_PROVIDER_WRONG_CODE: 'AUTHENTICATION_AUTH_PROVIDER_WRONG_CODE',
+};
+
+const AuthProviderCodeExpired = {
+  AUTHENTICATION_AUTH_PROVIDER_CODE_EXPIRED: 'AUTHENTICATION_AUTH_PROVIDER_CODE_EXPIRED',
+};
+
+const AuthProviderDuplicatedEmail = {
+  AUTHENTICATION_AUTH_PROVIDER_DUPLICATED_EMAIL: 'AUTHENTICATION_AUTH_PROVIDER_DUPLICATED_EMAIL',
+};
+
+const RefreshTokenNotFound = {
+  AUTHENTICATION_REFRESH_TOKEN_NOT_FOUND: 'AUTHENTICATION_REFRESH_TOKEN_NOT_FOUND',
+};
+
+const RefreshTokenExpired = {
+  AUTHENTICATION_REFRESH_TOKEN_EXPIRED: 'AUTHENTICATION_REFRESH_TOKEN_EXPIRED',
+};
+
+const RefreshTokenDisabled = {
+  AUTHENTICATION_REFRESH_TOKEN_DISABLED: 'AUTHENTICATION_REFRESH_TOKEN_DISABLED',
+};
+
+export const AuthenticationResponses = {
+  AccountNotFound,
+  AuthProviderNotFound,
+  AuthProviderEmailNotFound,
+  AuthProviderWrongPassword,
+  AuthProviderWrongProvider,
+  AuthProviderWrongCode,
+  AuthProviderCodeExpired,
+  AuthProviderDuplicatedEmail,
+  RefreshTokenNotFound,
+  RefreshTokenExpired,
+  RefreshTokenDisabled,
+} as const;
