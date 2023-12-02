@@ -3,11 +3,14 @@ import { PersonalAccount, PersonalAccountInstance } from "./PersonalAccount/Pers
 import { BaseAccountInstance, BaseAccountValues } from "./BaseAccount.model.js";
 import { PartialDeep } from "type-fest";
 import { Result } from "../../../core/types/Result.js";
+import { AdminAccount, AdminAccountInstance } from "./AdminAccount/AdminAccount.model.js";
 
 function _creator(item: {type: BaseAccountValues["type"]}): Result<SupportedAccounts, undefined>{
   switch(item.type){
     case AccountType.PERSONAL:
       return Result.ok(new PersonalAccount(item as PersonalAccountInstance));
+    case AccountType.ADMIN:
+      return Result.ok(new AdminAccount(item as AdminAccountInstance));
     default:
       return Result.fail();
   }
