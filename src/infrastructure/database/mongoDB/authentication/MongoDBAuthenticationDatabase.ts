@@ -25,6 +25,7 @@ import { dbPersonalAccountSchema } from './account/PersonalAccountDBModel.js';
 import { AccountType } from '../../../../domain/authentication/entities/Account/types.js';
 import { documentSelector } from '../core/utils/documentSelector.js';
 import { BaseAccount, BaseAccountInstance, BaseAccountValues } from '../../../../domain/authentication/entities/Account/BaseAccount.model.js';
+import { dbAdminAccountSchema } from './account/AdminAccountDBModel.js';
 
 export class MongoDBAuthenticationDatabase extends MongoDBDatabase implements AuthenticationDatabase {
   private accountModel: Model<DBBaseAccountInstance>;
@@ -41,6 +42,7 @@ export class MongoDBAuthenticationDatabase extends MongoDBDatabase implements Au
 
     this.accountModel = connection.model('Account', dbBaseAccountSchema);
     this.accountModel.discriminator("PersonalAccount", dbPersonalAccountSchema);
+    this.accountModel.discriminator("AdminAccount", dbAdminAccountSchema);
 
     this.authProviderModel = connection.model('AuthProvider', dbBaseAuthProviderSchema);
     this.authProviderModel.discriminator('EmailAuthProvider', dbEmailAuthProviderSchema);
@@ -52,6 +54,7 @@ export class MongoDBAuthenticationDatabase extends MongoDBDatabase implements Au
 
     this.accountModelMaps = {
       [AccountType.PERSONAL]: connection.model('PersonalAccount'),
+      [AccountType.ADMIN]: connection.model('AdminAccount'),
     };
 
     this.authProviderModelMaps = {

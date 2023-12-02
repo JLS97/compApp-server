@@ -6,6 +6,8 @@ import {DBAuthProviderToItem} from '../authProvider/BaseAuthProvider.js';
 export interface DBBaseAccountValue {
   type: string;
   providersId: string[];
+  username: string;
+  profileImage?: string;
 }
 
 export interface DBBaseAccountInstance extends DBBaseAccountValue {
@@ -19,6 +21,8 @@ export const dbBaseAccountSchema = new Schema<DBBaseAccountInstance>(
     id: {type: String, required: true, unique: true},
     type: {type: String, required: true},
     providersId: [{type: String}],
+    username: {type: String, required: true, unique: true},
+    profileImage: {type: String},
   },
   {
     collection: 'authentication_accounts',
