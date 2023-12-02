@@ -97,6 +97,14 @@ export const ENV = (() => {
      */
     SOCIAL_DATABASE_TYPE: process.env.SOCIAL_DATABASE_TYPE ?? 'mongodb',
     /**
+     * Tipo base de datos para los objetos. Los valores permitidos son: mongodb
+     */
+    OBJECTS_DATABASE_TYPE: process.env.OBJECTS_DATABASE_TYPE ?? 'mongodb',
+    /**
+     * Url de conexión de mongoDB para la base de datos de objetos
+     */
+    OBJECTS_DATABASE_MONGODB_URL: process.env.OBJECTS_DATABASE_MONGODB_URL ?? '',
+    /**
      * Url de conexión de mongoDB para la base de datos social
      */
     SOCIAL_DATABASE_MONGODB_URL: process.env.SOCIAL_DATABASE_MONGODB_URL ?? '',
