@@ -6,6 +6,8 @@ import { BaseAccountSchemas } from './BaseAccount.schemas.js';
 export interface BaseAccountValues {
   type: string;
   providersId: string[];
+  username: string;
+  profileImage?: string;
 }
 
 export type BaseAccountInstance = EntityValues & BaseAccountValues & {
@@ -15,6 +17,8 @@ export type BaseAccountInstance = EntityValues & BaseAccountValues & {
 export abstract class BaseAccount extends Entity implements BaseAccountInstance {
   type: string;
   providersId: string[];
+  username: string;
+  profileImage?: string;
   providers?: BaseAuthProviderInstance[];
 
   static _updateValueSchema: yup.ObjectSchema<any> = yup.object().shape({
