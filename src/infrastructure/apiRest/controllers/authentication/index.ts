@@ -1,6 +1,7 @@
 export * from './loginController.js';
 export * from './signupController.js';
 export * from './infoController.js';
+export * from './createAccountController.js';
 export * from './refreshTokenController.js';
 export * from './googleController.js';
 export * from './facebookController.js';

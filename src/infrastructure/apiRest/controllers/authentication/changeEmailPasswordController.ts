@@ -5,6 +5,9 @@ import {ServerResponseCode, ServerResponseStatus} from '../../types.js';
 
 interface ChangeEmailPasswordControllerParams {
   authenticationService: AuthenticationService;
+  accessTokenExpiresInMs: number;
+  refreshTokenExpiresInMs: number;
+  accessTokenSecret: string;
 }
 
 export function changeEmailPasswordController(params: ChangeEmailPasswordControllerParams): RequestHandler {
@@ -20,6 +23,16 @@ export function changeEmailPasswordController(params: ChangeEmailPasswordControl
       return;
     }
 
-    sendResponse(res, ServerResponseStatus.OK, ServerResponseCode.SUCCESS, result.success);
+    /**
+     * Al cambiar la contraseña se invalidan todos los refresh tokens del proveedor.
+     * Se devuelven credenciales nuevas para que la sesión desde la que se ha cambiado siga activa. Si no se pueden generar, el cliente tendrá que volver a iniciar sesión
+     */
+    const credentialsResult = await params.authenticationService.generateCredentials(authProviderId, {
+      accessTokenExpiresInMs: params.accessTokenExpiresInMs,
+      accessTokenSecret: params.accessTokenSecret,
+      refreshTokenExpiresInMs: params.refreshTokenExpiresInMs,
+    });
+
+    sendResponse(res, ServerResponseStatus.OK, ServerResponseCode.SUCCESS, credentialsResult.isSuccess ? credentialsResult.success : undefined);
   };
 }

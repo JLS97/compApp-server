@@ -55,7 +55,8 @@ export async function uploadPublicImage(params: UploadPublicImageParams): Promis
       const buffer = await readFile(file.tempFilePath);
       const extension = mime.extension(file.mimetype);
       const fileName = params.options.destFileName ? `${params.options.destFileName}.${extension}` : file.name;
-      const fullPath = params.options.destFolder ? path.join(params.options.destFolder, fileName) : fileName;
+      // Las claves de S3 siempre usan "/". Con path.join, en Windows se generarían con "\"
+      const fullPath = params.options.destFolder ? path.posix.join(params.options.destFolder, fileName) : fileName;
 
       const uploadPromise = new Upload({
         client: params.s3,

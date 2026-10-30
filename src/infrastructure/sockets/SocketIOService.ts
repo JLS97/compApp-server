@@ -21,7 +21,6 @@ export interface SocketIOServiceParams {
 export class SocketIOService {
   private _io: Namespace<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
   _socketServer: SocketServer;
-  socket: ExtendedSocket;
   private _monitorizationNamespace: string;
 
   constructor(params: SocketIOServiceParams) {
@@ -39,12 +38,14 @@ export class SocketIOService {
         useSocketAuthentication({
           accessTokenSecret: params.accessTokenSecret,
           authenticationService: params.authenticationService,
-          onSocketReady: (socket: ExtendedSocket) => (this.socket = socket),
           loggerService: params.loggerService,
         })
       )
-      .on('connection', () => {
-        params.onConnectSuccess?.(this.socket);
+      /**
+       * Hay que usar el socket que recibe el evento. Si se guardase en un campo de la clase, con dos conexiones simultáneas una pisaría a la otra
+       */
+      .on('connection', (socket) => {
+        params.onConnectSuccess?.(socket as ExtendedSocket);
       });
   }
 
@@ -53,7 +54,7 @@ export class SocketIOService {
   }
 
   /**
-   * Para que los eventos lleguen a cualquier usuario que se elija, hay que utilizar esto. Si se utiliza this.socket el evento no llegará al propio usuario del socket, pero ese caso lo manejamos nosotros mismos explicitando a qué usuarios les tienen que llegar los eventos
+   * Para que los eventos lleguen a cualquier usuario que se elija, hay que utilizar esto. Si se emite desde un socket concreto el evento no llegará al propio usuario del socket, pero ese caso lo manejamos nosotros mismos explicitando a qué usuarios les tienen que llegar los eventos
    */
   get server() {
     return this._io;

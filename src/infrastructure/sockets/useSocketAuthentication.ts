@@ -7,7 +7,6 @@ import {AccessTokenPayload} from '../../domain/authentication/types.js';
 export interface UseSocketAuthenticationParams {
   authenticationService: AuthenticationService;
   accessTokenSecret: string;
-  onSocketReady: (socket: ExtendedSocket) => void;
   loggerService?: LoggerService;
 }
 
@@ -29,11 +28,10 @@ export function useSocketAuthentication(params: UseSocketAuthenticationParams) {
       socket.accounts = accountsResult.success;
       socket.authProviderId = decodedToken.authProviderId;
 
-      params.onSocketReady(socket);
-
       next();
     } catch (_error) {
-      params.loggerService?.error(`[SOCKET] CLIENT_SOCKET_UNAUTHORIZED: ${accessToken}`);
+      // No se escribe el token en el log: quien tenga acceso a los logs podría reutilizarlo mientras no caduque
+      params.loggerService?.error(`[SOCKET] CLIENT_SOCKET_UNAUTHORIZED: ${socket.id}`);
       return next(new Error('SOCKET UNAUTHORIZED'));
     }
   };

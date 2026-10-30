@@ -2,6 +2,7 @@ import {RequestHandler} from 'express';
 import {AuthenticationService} from '../../../../application/authentication/authentication.service.js';
 import {sendResponse} from '../../sendResponse.js';
 import {ServerResponseCode, ServerResponseStatus} from '../../types.js';
+import {toPublicAuthProvider} from '../../../../application/authentication/utils/toPublicAuthProvider.js';
 
 interface ChangeEmailControllerParams {
   authenticationService: AuthenticationService;
@@ -20,6 +21,6 @@ export function changeEmailController(params: ChangeEmailControllerParams): Requ
       return;
     }
 
-    sendResponse(res, ServerResponseStatus.OK, ServerResponseCode.SUCCESS, result.success);
+    sendResponse(res, ServerResponseStatus.OK, ServerResponseCode.SUCCESS, toPublicAuthProvider(result.success));
   };
 }

@@ -1,1 +1,8 @@
 node_modules
+dist
+*.log
+
+# Las variables de entorno reales nunca deben subirse. Solo se versiona la plantilla
+.env
+.env.*
+!.env.example

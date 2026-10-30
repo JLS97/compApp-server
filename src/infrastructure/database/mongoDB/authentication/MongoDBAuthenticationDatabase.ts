@@ -19,6 +19,7 @@ import {findMany} from '../core/operations/findMany.js';
 import {findPaginated} from '../core/operations/findPaginated.js';
 import {removeOne} from '../core/operations/removeOne.js';
 import {createOne} from '../core/operations/createOne.js';
+import {editMany} from '../core/operations/editMany.js';
 import {createMany} from '../core/operations/createMany.js';
 import {editOne} from '../core/operations/editOne.js';
 import { dbPersonalAccountSchema } from './account/PersonalAccountDBModel.js';
@@ -170,6 +171,13 @@ export class MongoDBAuthenticationDatabase extends MongoDBDatabase implements Au
     newValues: Partial<Record<keyof T, Operation>>
   ): Promise<Result<RefreshTokenInstance, undefined>> {
     return await editOne(this.refreshTokenModel, DBRefreshTokenToItem)(searchBy, newValues);
+  }
+
+  async editRefreshTokens<T extends RefreshTokenInstance>(
+    searchBy: Partial<Record<keyof T, Operation>>,
+    newValues: Partial<Record<keyof T, Operation>>
+  ): Promise<Result<RefreshTokenInstance[], undefined>> {
+    return await editMany(this.refreshTokenModel, DBRefreshTokenToItem)(searchBy, newValues);
   }
 
   async findRefreshToken<T extends RefreshTokenInstance>(filters: Partial<Record<keyof T, Operation>>): Promise<Result<RefreshTokenInstance, undefined>> {

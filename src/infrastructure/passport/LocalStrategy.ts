@@ -1,6 +1,7 @@
 import {Strategy as PassportLocalStrategy} from 'passport-local';
 import {AuthenticationService} from '../../application/authentication/authentication.service.js';
 import {LoggerService} from '../../domain/logger/LoggerService.js';
+import {normalizeEmail} from '../../application/authentication/utils/normalizeEmail.js';
 
 interface LocalStrategyParams {
   authenticationService: AuthenticationService;
@@ -16,7 +17,7 @@ export function LocalStrategy(params: LocalStrategyParams) {
     },
     async (email: string, password: string, done) => {
       try {
-        const formattedEmail = email.toLocaleLowerCase().trim();
+        const formattedEmail = normalizeEmail(email);
 
         const loginResult = await params.authenticationService.loginWithEmailAndPassword(formattedEmail, password);
 

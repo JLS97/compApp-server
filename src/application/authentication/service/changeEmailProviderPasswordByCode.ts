@@ -12,6 +12,7 @@ import {isAfter} from 'date-fns';
 import {prepareQueryOperation} from '../../../domain/operations/prepareQueryOperation.js';
 import {prepareUpdateOperation} from '../../../domain/operations/prepareUpdateOperation.js';
 import { EntitySchemas } from '../../../domain/core/entities/Entity/Entity.schemas.js';
+import { RefreshTokenInstance } from '../../../domain/authentication/entities/RefreshToken/RefreshToken.model.js';
 
 export const ChangeEmailProviderPasswordByCodeError = {
   ...CoreResponses.InvalidRequest,
@@ -76,6 +77,14 @@ export async function changeEmailProviderPasswordByCode(
   }
 
   const updatedEmailAuthProvider = updateEmailAuthProviderResult.success as EmailAuthProviderInstance;
+
+  /**
+   * Si se resetea la contraseña es porque la anterior puede estar comprometida: se cierran todas las sesiones abiertas
+   */
+  await db.editRefreshTokens(
+    prepareQueryOperation<RefreshTokenInstance>({authProviderId: emailAuthProvider.id}),
+    prepareUpdateOperation<RefreshTokenInstance>({isValid: false})
+  );
 
   eventsService.emit<AuthenticationAuthProviderChangedPasswordByCodeEventPayload>(
     AuthenticationEvents.AUTHENTICATION_AUTH_PROVIDER_CHANGED_PASSWORD_BY_CODE,

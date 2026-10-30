@@ -11,6 +11,7 @@ import {AuthenticationAuthProviderChangedEmailEventPayload, AuthenticationEvents
 import {prepareQueryOperation} from '../../../domain/operations/prepareQueryOperation.js';
 import {prepareUpdateOperation} from '../../../domain/operations/prepareUpdateOperation.js';
 import { EntitySchemas } from '../../../domain/core/entities/Entity/Entity.schemas.js';
+import { normalizeEmail } from '../utils/normalizeEmail.js';
 
 export const ChangeEmailError = {
   ...CoreResponses.InvalidRequest,
@@ -27,6 +28,8 @@ export async function changeEmail(
   authProviderId: string,
   newEmail: string
 ): Promise<Result<EmailAuthProviderInstance, ChangeEmailError>> {
+  newEmail = normalizeEmail(newEmail);
+
   const schema = yup.object().shape({
     authProviderId: EntitySchemas.id.required(),
     newEmail: EmailAuthProviderSchema.email.required(),

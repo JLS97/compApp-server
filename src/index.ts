@@ -49,7 +49,11 @@ if (ENV.SOCKET_ENABLED) {
 
   const socketService = socketSelector().socket;
 
-  socketService.runMonitorization(ENV.SOCKET_MONITORIZATION_MODE, ENV.SOCKET_MONITORIZATION_USERNAME, ENV.SOCKET_MONITORIZATION_PASSWORD);
+  if (ENV.SOCKET_MONITORIZATION_USERNAME && ENV.SOCKET_MONITORIZATION_PASSWORD) {
+    socketService.runMonitorization(ENV.SOCKET_MONITORIZATION_MODE, ENV.SOCKET_MONITORIZATION_USERNAME, ENV.SOCKET_MONITORIZATION_PASSWORD);
+  } else {
+    loggerService.warn('[SOCKET]: Monitorization disabled. Set SOCKET_MONITORIZATION_USERNAME and SOCKET_MONITORIZATION_PASSWORD to enable it');
+  }
 
   socketService.start((socket) => {
     loggerService.info(`[SOCKET]: Client connected ${socket.id}`);

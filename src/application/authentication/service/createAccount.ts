@@ -5,10 +5,13 @@ import {CoreResponses} from '../../../domain/core/core.responses.js';
 import {EventsService} from '../../../domain/events/EventsService.js';
 import { AccountFactory } from '../../../domain/authentication/entities/Account/Account.factory.js';
 import { BaseAccountInstance, BaseAccountValues } from '../../../domain/authentication/entities/Account/BaseAccount.model.js';
+import { prepareQueryOperation } from '../../../domain/operations/prepareQueryOperation.js';
+import { AuthenticationResponses } from '../authentication.responses.js';
 
 export const CreateAccountError = {
   ...CoreResponses.InvalidRequest,
   ...CoreResponses.Unknown,
+  ...AuthenticationResponses.AccountDuplicatedUsername,
 } as const;
 export type CreateAccountError = (typeof CreateAccountError)[keyof typeof CreateAccountError];
 
@@ -21,6 +24,12 @@ export async function createAccount(
   
   if (accountCandidate.isFailure || !accountCandidate.success.isValidCreateValue()) {
     return Result.fail(CreateAccountError.INVALID_REQUEST);
+  }
+
+  const existingAccountResult = await authenticationDatabase.findAccount(prepareQueryOperation<BaseAccountInstance>({username: accountCandidate.success.username}));
+
+  if (existingAccountResult.isSuccess) {
+    return Result.fail(CreateAccountError.AUTHENTICATION_ACCOUNT_DUPLICATED_USERNAME);
   }
 
   const result = await authenticationDatabase.addAccount(accountCandidate.success.values());

@@ -2,6 +2,10 @@ const AccountNotFound = {
   AUTHENTICATION_ACCOUNT_NOT_FOUND: 'AUTHENTICATION_ACCOUNT_NOT_FOUND',
 };
 
+const AccountDuplicatedUsername = {
+  AUTHENTICATION_ACCOUNT_DUPLICATED_USERNAME: 'AUTHENTICATION_ACCOUNT_DUPLICATED_USERNAME',
+};
+
 const AuthProviderNotFound = {
   AUTHENTICATION_AUTH_PROVIDER_NOT_FOUND: 'AUTHENTICATION_AUTH_PROVIDER_NOT_FOUND',
 };
@@ -44,6 +48,7 @@ const RefreshTokenDisabled = {
 
 export const AuthenticationResponses = {
   AccountNotFound,
+  AccountDuplicatedUsername,
   AuthProviderNotFound,
   AuthProviderEmailNotFound,
   AuthProviderWrongPassword,
