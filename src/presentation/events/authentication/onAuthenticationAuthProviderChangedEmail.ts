@@ -3,6 +3,7 @@ import {LoggerService} from '../../../domain/logger/LoggerService.js';
 import { SocketRooms, roomFormatter } from '../../../infrastructure/sockets/rooms.js';
 import { socketSelector } from '../../services/getSocketService.js';
 import { AuthenticationSocketEvents } from './socket.events.js';
+import { toPublicAuthProvider } from '../../../application/authentication/utils/toPublicAuthProvider.js';
 
 interface Params {
   loggerService: LoggerService;
@@ -14,6 +15,6 @@ export function onAuthenticationAuthProviderChangedEmail(params: Params) {
 
     const socketsService = socketSelector().socket;
 
-    socketsService.server.to(roomFormatter(SocketRooms.PROVIDER, payload.id)).emit(AuthenticationSocketEvents.AUTHENTICATION_AUTH_PROVIDER_CHANGED_EMAIL, payload);
+    socketsService.server.to(roomFormatter(SocketRooms.PROVIDER, payload.id)).emit(AuthenticationSocketEvents.AUTHENTICATION_AUTH_PROVIDER_CHANGED_EMAIL, toPublicAuthProvider(payload));
   };
 }

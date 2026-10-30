@@ -67,6 +67,24 @@ apiRestAuth.get(
 );
 
 /**
+ * Crea una cuenta personal vinculada al proveedor de autenticación del access token.
+ * El access token actual no incluye la cuenta nueva, así que el cliente debe llamar a /refresh para obtener uno que sí la incluya
+ */
+apiRestAuth.post(
+  '/account',
+  Middlewares.isFeaturedEnabled(ENV.JWT_AUTHENTICATION_ENABLED),
+  Middlewares.authorization.requireAccessToken({
+    loggerService,
+  }),
+  Middlewares.errorHandler(
+    Controllers.auth.createAccountController({
+      authenticationService,
+    }),
+    loggerService
+  )
+);
+
+/**
  * Refresca un access token a partir de un refresh token
  */
 apiRestAuth.post(

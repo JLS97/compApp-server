@@ -23,11 +23,14 @@ export abstract class BaseAccount extends Entity implements BaseAccountInstance 
 
   static _updateValueSchema: yup.ObjectSchema<any> = yup.object().shape({
     providersId: BaseAccountSchemas.providersId,
+    username: BaseAccountSchemas.username,
+    profileImage: BaseAccountSchemas.profileImage,
   });
 
   static _createValueSchema: yup.ObjectSchema<any> = yup.object().shape({
     ...BaseAccount._updateValueSchema.fields,
     providersId: BaseAccountSchemas.providersId.required(),
+    username: BaseAccountSchemas.username.required(),
   });
 
   static _instanceSchema: yup.ObjectSchema<any> = yup.object().shape({

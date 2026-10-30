@@ -23,8 +23,8 @@ function stringToArray(input: string): string[]{
 type SocketMonitorizationMode = 'development' | 'production';
 
 export const ENV = (() => {
-  const socketMonitorizationMode = ['development', 'production'].includes(process.env.SOCKET_MONITORIZATION_USERNAME)
-    ? (process.env.SOCKET_MONITORIZATION_USERNAME as SocketMonitorizationMode)
+  const socketMonitorizationMode = ['development', 'production'].includes(process.env.SOCKET_MONITORIZATION_MODE)
+    ? (process.env.SOCKET_MONITORIZATION_MODE as SocketMonitorizationMode)
     : 'production';
 
   return {

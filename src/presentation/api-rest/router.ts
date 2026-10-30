@@ -6,7 +6,6 @@ import compression from 'compression';
 import cors from 'cors';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import fileUpload from 'express-fileupload';
 import {apiRestAuth} from './auth.js';
 import { apiRestPushNotificationDevices } from './pushNotificationDevices.js';
 import {getPassport, initializePassport} from '../../infrastructure/passport/passport.js';
@@ -42,16 +41,6 @@ apiRest.use(
   })
 );
 apiRest.use(express.urlencoded({extended: true}));
-apiRest.use(
-  fileUpload({
-    useTempFiles: true,
-    debug: false,
-    tempFileDir: '/tmp/',
-    uploadTimeout: 30 * 1000,
-    abortOnLimit: true,
-    safeFileNames: true,
-  })
-);
 apiRest.use(cookieParser(ENV.AUTHENTICATION_SESSION_SECRET));
 
 /**
