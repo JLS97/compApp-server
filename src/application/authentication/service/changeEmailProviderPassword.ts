@@ -11,6 +11,7 @@ import {AuthenticationAuthProviderChangedPasswordEventPayload, AuthenticationEve
 import {prepareQueryOperation} from '../../../domain/operations/prepareQueryOperation.js';
 import {prepareUpdateOperation} from '../../../domain/operations/prepareUpdateOperation.js';
 import { EntitySchemas } from '../../../domain/core/entities/Entity/Entity.schemas.js';
+import { RefreshTokenInstance } from '../../../domain/authentication/entities/RefreshToken/RefreshToken.model.js';
 
 export const ChangeEmailProviderPasswordError = {
   ...CoreResponses.InvalidRequest,
@@ -68,6 +69,14 @@ export async function changeEmailProviderPassword(
   }
 
   const updatedEmailAuthProvider = updateEmailAuthProviderResult.success as EmailAuthProviderInstance;
+
+  /**
+   * Las sesiones abiertas con la contraseña anterior dejan de poder renovar su access token
+   */
+  await db.editRefreshTokens(
+    prepareQueryOperation<RefreshTokenInstance>({authProviderId: emailAuthProvider.id}),
+    prepareUpdateOperation<RefreshTokenInstance>({isValid: false})
+  );
 
   eventsService.emit<AuthenticationAuthProviderChangedPasswordEventPayload>(
     AuthenticationEvents.AUTHENTICATION_AUTH_PROVIDER_CHANGED_PASSWORD,

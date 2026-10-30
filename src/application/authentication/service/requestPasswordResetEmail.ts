@@ -6,6 +6,7 @@ import {CoreResponses} from '../../../domain/core/core.responses.js';
 import {EventsService} from '../../../domain/events/EventsService.js';
 import {AuthenticationResponses} from '../authentication.responses.js';
 import {AuthenticationService} from '../authentication.service.js';
+import {normalizeEmail} from '../utils/normalizeEmail.js';
 
 export const RequestPasswordResetEmailError = {
   ...CoreResponses.InvalidRequest,
@@ -18,6 +19,8 @@ export async function requestPasswordResetEmail(
   eventsService: EventsService,
   email: string
 ): Promise<Result<undefined, RequestPasswordResetEmailError>> {
+  email = normalizeEmail(email);
+
   if (!EmailAuthProviderSchema.email.required().isValidSync(email)) {
     return Result.fail(RequestPasswordResetEmailError.INVALID_REQUEST);
   }

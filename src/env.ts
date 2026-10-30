@@ -121,6 +121,14 @@ export const ENV = (() => {
      */
     JWT_REFRESH_TOKEN_EXPIRATION_TIME_MS: stringToNumber(process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME_MS, 7 * 24 * 60 * 60 * 1000),
     /**
+     * Duración en milisegundos de la ventana del límite de peticiones de las rutas que reciben credenciales (login, signup, cambios de contraseña...)
+     */
+    AUTHENTICATION_RATE_LIMIT_WINDOW_MS: stringToNumber(process.env.AUTHENTICATION_RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),
+    /**
+     * Número máximo de peticiones por IP dentro de la ventana a las rutas que reciben credenciales
+     */
+    AUTHENTICATION_RATE_LIMIT_MAX_REQUESTS: stringToNumber(process.env.AUTHENTICATION_RATE_LIMIT_MAX_REQUESTS, 20),
+    /**
      * Habilita el inicio de sesión mediante email y contraseña
      */
     EMAIL_PASSWORD_AUTHENTICATION_ENABLED: stringToBoolean(process.env.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),

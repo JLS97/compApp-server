@@ -13,6 +13,8 @@ export const ServerResponseCode = {
   ROUTE_NOT_FOUND: 'ROUTE_NOT_FOUND',
   // La característica no está habilitada o no está implementada
   NOT_IMPLEMENTED: 'NOT_IMPLEMENTED',
+  // Quien hace la petición ha superado el número de peticiones permitidas en un periodo de tiempo
+  TOO_MANY_REQUESTS: 'TOO_MANY_REQUESTS',
   // La petición ha fallado debido a un error interno del servidor
   INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
 } as const;

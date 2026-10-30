@@ -1,6 +1,7 @@
 import {Document, Schema} from 'mongoose';
 import {BaseAuthProviderInstance, BaseAuthProviderValues} from '../../../../../domain/authentication/entities/AuthProvider/BaseAuthProvider.model.js';
 import { AuthProviderFactory } from '../../../../../domain/authentication/entities/AuthProvider/AuthProvider.factory.js';
+import { AuthProviderType } from '../../../../../domain/authentication/entities/AuthProvider/types.js';
 
 export interface DBBaseAuthProviderValue {
   type: string;
@@ -25,6 +26,12 @@ export const dbBaseAuthProviderSchema = new Schema<DBBaseAuthProviderInstance>(
     },
   }
 );
+
+/**
+ * Evita que dos registros simultáneos creen dos proveedores de email con el mismo email.
+ * Se define en el esquema base porque todos los proveedores comparten colección y solo se aplica a los de tipo email
+ */
+dbBaseAuthProviderSchema.index({email: 1}, {unique: true, partialFilterExpression: {type: AuthProviderType.EMAIL}});
 
 export function DBAuthProviderToItem(dbItem: DBBaseAuthProviderValue & Document): BaseAuthProviderInstance {
   const baseParams = {...dbItem.toJSON()};

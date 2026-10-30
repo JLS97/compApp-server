@@ -35,24 +35,16 @@ export async function generateCredentials(
     return Result.fail(GenerateCredentialsError.INVALID_REQUEST);
   }
 
-  const existingRefreshTokenResult = await authenticationService.getRefreshTokenById(authProviderId);
-
-  let refreshTokenId: string;
-
   /**
-   * Para poder invalidar los refresh token, primero intentamos utilizar uno existente. Si no existe, se crea
+   * Cada inicio de sesión tiene su propio refresh token. Para invalidarlos todos a la vez (por ejemplo, al cambiar la contraseña) se buscan por authProviderId
    */
-  if (existingRefreshTokenResult.isFailure) {
-    const refreshTokenCreationResult = await authenticationService.createRefreshTokenForAuthProviderId(authProviderId, options.refreshTokenExpiresInMs);
+  const refreshTokenCreationResult = await authenticationService.createRefreshTokenForAuthProviderId(authProviderId, options.refreshTokenExpiresInMs);
 
-    if (refreshTokenCreationResult.isFailure) {
-      return Result.fail(refreshTokenCreationResult.failure);
-    }
-
-    refreshTokenId = refreshTokenCreationResult.success.id;
-  } else {
-    refreshTokenId = existingRefreshTokenResult.success.id;
+  if (refreshTokenCreationResult.isFailure) {
+    return Result.fail(refreshTokenCreationResult.failure);
   }
+
+  const refreshTokenId = refreshTokenCreationResult.success.id;
 
   const createAccessTokenResult = await authenticationService.createAccessTokenFromRefreshToken(refreshTokenId, {
     accessTokenSecret: options.accessTokenSecret,

@@ -19,11 +19,21 @@ const authenticationService = new AuthenticationService({
 });
 
 /**
+ * Límite compartido por las rutas que reciben credenciales para frenar ataques de fuerza bruta.
+ * /refresh queda fuera porque el refresh token es aleatorio y no se puede adivinar, y los clientes lo llaman cada pocos minutos
+ */
+const credentialsRateLimiter = Middlewares.rateLimiter({
+  windowMs: ENV.AUTHENTICATION_RATE_LIMIT_WINDOW_MS,
+  maxRequests: ENV.AUTHENTICATION_RATE_LIMIT_MAX_REQUESTS,
+});
+
+/**
  * Crea un proveedor de autenticación mediante email
  */
 apiRestAuth.post(
   '/signup',
   Middlewares.isFeaturedEnabled(ENV.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),
+  credentialsRateLimiter,
   Middlewares.errorHandler(
     Controllers.auth.signupController({
       authenticationService,
@@ -42,6 +52,7 @@ apiRestAuth.post(
 apiRestAuth.post(
   '/login',
   Middlewares.isFeaturedEnabled(ENV.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),
+  credentialsRateLimiter,
   Middlewares.errorHandler(
     Controllers.auth.loginController({
       authenticationService,
@@ -357,6 +368,7 @@ apiRestAuth.get(
 apiRestAuth.post(
   '/reset-password',
   Middlewares.isFeaturedEnabled(ENV.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),
+  credentialsRateLimiter,
   Middlewares.errorHandler(
     Controllers.auth.requestEmailPasswordResetController({
       authenticationService,
@@ -381,15 +393,20 @@ apiRestAuth.post(
 );
 
 /**
- * Permite un cambio de contraseña de un proveedor de autenticación de email
+ * Permite un cambio de contraseña de un proveedor de autenticación de email.
+ * Invalida todas las sesiones del proveedor y devuelve credenciales nuevas para la sesión actual
  */
 apiRestAuth.post(
   '/change-password',
   Middlewares.isFeaturedEnabled(ENV.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),
+  credentialsRateLimiter,
   Middlewares.authorization.requireAccessToken({loggerService}),
   Middlewares.errorHandler(
     Controllers.auth.changeEmailPasswordController({
       authenticationService,
+      accessTokenExpiresInMs: ENV.JWT_ACCESS_TOKEN_EXPIRATION_TIME_MS,
+      accessTokenSecret: ENV.JWT_SECRET,
+      refreshTokenExpiresInMs: ENV.JWT_REFRESH_TOKEN_EXPIRATION_TIME_MS,
     }),
     loggerService
   )
@@ -401,6 +418,7 @@ apiRestAuth.post(
 apiRestAuth.post(
   '/change-password/code',
   Middlewares.isFeaturedEnabled(ENV.EMAIL_PASSWORD_AUTHENTICATION_ENABLED),
+  credentialsRateLimiter,
   Middlewares.errorHandler(
     Controllers.auth.changeEmailPasswordByCodeController({
       authenticationService,

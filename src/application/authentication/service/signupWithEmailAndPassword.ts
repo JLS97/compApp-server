@@ -8,6 +8,7 @@ import {AuthenticationService} from '../authentication.service.js';
 import {AuthenticationDatabase} from '../../../domain/authentication/authentication.database.js';
 import {EventsService} from '../../../domain/events/EventsService.js';
 import {AuthenticationAuthProviderCreatedEventPayload, AuthenticationEvents} from '../../../domain/authentication/authentication.events.js';
+import {normalizeEmail} from '../utils/normalizeEmail.js';
 
 export const SignupWithEmailAndPasswordError = {
   ...CoreResponses.InvalidRequest,
@@ -23,6 +24,8 @@ export async function signupWithEmailAndPassword(
   email: string,
   password: string
 ): Promise<Result<EmailAuthProviderInstance, SignupWithEmailAndPasswordError>> {
+  email = normalizeEmail(email);
+
   const schema = yup.object().shape({
     email: EmailAuthProviderSchema.email.required(),
     password: EmailAuthProviderSchema.password.required(),

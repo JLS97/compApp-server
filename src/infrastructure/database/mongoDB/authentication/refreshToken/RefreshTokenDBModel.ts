@@ -30,6 +30,13 @@ export const dbRefreshTokenSchema = new Schema<DBRefreshTokenInstance>(
   }
 );
 
+dbRefreshTokenSchema.index({authProviderId: 1});
+
+/**
+ * Mongo borra automáticamente los refresh tokens en cuanto caducan. Como se crea uno por inicio de sesión, si no se borrasen la colección crecería sin límite
+ */
+dbRefreshTokenSchema.index({expiresAt: 1}, {expireAfterSeconds: 0});
+
 export const RefreshTokenVirtuals = {
   authProvider: 'authProvider',
 } as const;

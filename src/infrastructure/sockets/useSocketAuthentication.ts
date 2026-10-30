@@ -30,7 +30,8 @@ export function useSocketAuthentication(params: UseSocketAuthenticationParams) {
 
       next();
     } catch (_error) {
-      params.loggerService?.error(`[SOCKET] CLIENT_SOCKET_UNAUTHORIZED: ${accessToken}`);
+      // No se escribe el token en el log: quien tenga acceso a los logs podría reutilizarlo mientras no caduque
+      params.loggerService?.error(`[SOCKET] CLIENT_SOCKET_UNAUTHORIZED: ${socket.id}`);
       return next(new Error('SOCKET UNAUTHORIZED'));
     }
   };

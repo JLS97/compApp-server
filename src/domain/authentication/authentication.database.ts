@@ -56,6 +56,10 @@ export abstract class AuthenticationDatabase {
     searchBy: Partial<Record<keyof T, Operation>>,
     newValues: Partial<Record<keyof T, Operation>>
   ): Promise<Result<RefreshTokenInstance, undefined>>;
+  abstract editRefreshTokens<T extends RefreshTokenInstance>(
+    searchBy: Partial<Record<keyof T, Operation>>,
+    newValues: Partial<Record<keyof T, Operation>>
+  ): Promise<Result<RefreshTokenInstance[], undefined>>;
   abstract removeRefreshToken<T extends RefreshTokenInstance>(criteria: Partial<Record<keyof T, Operation>>): Promise<Result<RefreshTokenInstance, undefined>>;
   abstract addRefreshToken<T extends RefreshTokenInstance, K extends RefreshTokenValues>(
     instance: Partial<T> & K
